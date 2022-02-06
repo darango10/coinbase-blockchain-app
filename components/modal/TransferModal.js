@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
 import styled from "styled-components";
 import Transfer from "./Transfer";
+import CoinSelector from "./CoinSelector";
+import {TailSpin} from "react-loader-spinner";
+import Receive from "./Receive";
 
 const TransferModal = ({sanityTokens, walletAddress, thirdWebTokens}) => {
 
@@ -26,30 +29,87 @@ const TransferModal = ({sanityTokens, walletAddress, thirdWebTokens}) => {
         />;
 
       case 'Receive':
-        return <h2>Receive</h2>
+        return <Receive
+          selectedToken={selectedToken}
+          walletAddress={walletAddress}
+          setAction={setAction}
+        />;
+
+      case 'Transferring':
+        return <div style={{
+          display: 'flex',
+          height: '100%',
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          fontSize: '1.5rem',
+          flexDirection: 'column'
+        }}>
+          <h2>Transfer in progress...</h2>
+          <TailSpin
+            color="grey"
+            height={'100'}
+            width={'100'}
+            ariaLabel={'Transferring'}
+          />
+        </div>
 
       case 'Transferred':
-        return <h2>Transferred</h2>
+        return <div style={{
+          display: 'flex',
+          height: '100%',
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          fontSize: '2rem',
+          fontWeight: '600',
+          color: '#27ad75',
+        }}>
+          Transfer complete!
+        </div>
+
+      case 'Error':
+        return <div style={{
+          display: 'flex',
+          height: '100%',
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          fontSize: '2rem',
+          fontWeight: '600',
+          color: 'red',
+        }}>
+          Transfer failed!
+        </div>
+
+      case 'Select':
+        return <CoinSelector
+          sanityTokens={sanityTokens}
+          setSelectedToken={setSelectedToken}
+          selectedToken={selectedToken}
+          walletAddress={walletAddress}
+          thirdWebTokens={thirdWebTokens}
+          setAction={setAction}
+        />;
+
       default:
         return <h2>Send</h2>
     }
   }
 
-  return (
-    <Wrapper>
-      <Selector>
-        <Option onClick={() => setAction('Send')} style={action === 'Send' ? selectedStyle : unselectedStyle}>
-          <p>Send</p>
-        </Option>
-        <Option onClick={() => setAction('Receive')} style={action === 'Receive' ? selectedStyle : unselectedStyle}>
-          <p>Receive</p>
-        </Option>
-      </Selector>
-      <ModalMain>
-        {selectedModal(action)}
-      </ModalMain>
-    </Wrapper>
-  );
+  return (<Wrapper>
+    <Selector>
+      <Option onClick={() => setAction('Send')} style={action === 'Send' ? selectedStyle : unselectedStyle}>
+        <p>Send</p>
+      </Option>
+      <Option onClick={() => setAction('Receive')} style={action === 'Receive' ? selectedStyle : unselectedStyle}>
+        <p>Receive</p>
+      </Option>
+    </Selector>
+    <ModalMain>
+      {selectedModal(action)}
+    </ModalMain>
+  </Wrapper>);
 };
 
 const Wrapper = styled.div`

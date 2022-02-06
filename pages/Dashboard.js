@@ -28,7 +28,6 @@ const Dashboard = ({address}) => {
       setSanityTokens(sanityTokens);
 
       setThirdWebTokens(sanityTokens.map(token => sdk.getTokenModule(token.contractAddress)));
-
     };
     getSanityAndThirdWebTokens()
   }, []);

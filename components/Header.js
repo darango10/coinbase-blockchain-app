@@ -4,11 +4,13 @@ import Modal from 'react-modal';
 import {useRouter} from "next/router";
 import Link from "next/link";
 import TransferModal from "./modal/TransferModal";
+import {useWeb3} from "@3rdweb/hooks";
 
 Modal.setAppElement('#__next');
 
 const Header = ({walletAddress, sanityTokens, thirdWebTokens}) => {
   const router = useRouter();
+  const {connectWallet} = useWeb3();
   const customStyles = {
     content: {
       top: '50%',
@@ -32,10 +34,17 @@ const Header = ({walletAddress, sanityTokens, thirdWebTokens}) => {
     <Wrapper>
       <Title>Assets</Title>
       <ButtonsContainer>
-        <WalletLink>
-          <WalletLinkTitle>Wallet Connected</WalletLinkTitle>
-          <WalletAddress>{walletAddress.slice(0, 7)} ... {walletAddress.slice(35)}</WalletAddress>
-        </WalletLink>
+        {walletAddress ? (
+          <WalletLink>
+            <WalletLinkTitle>Wallet Connected</WalletLinkTitle>
+            <WalletAddress>{walletAddress.slice(0, 7)} ... {walletAddress.slice(35)}</WalletAddress>
+          </WalletLink>
+        ) : (
+          <Button onClick={() => connectWallet('injected')}>
+            Connect Wallet
+          </Button>
+        )}
+
         <Button style={{backgroundColor: "#3773f5", color: "#000"}}>
           Buy / Sell
         </Button>

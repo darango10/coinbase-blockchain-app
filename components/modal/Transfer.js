@@ -37,9 +37,16 @@ const Transfer = ({selectedToken, setAction, thirdWebTokens, walletAddress}) => 
 
   const sendCrypto = async (amount, recipient) => {
     if (activeThirdWebToken && amount && recipient) {
-      const tx = await activeThirdWebToken.transfer(recipient, amount.toString().concat('000000000000000000'));
-      console.log(tx);
-      setAction('Transferred');
+      setAction('Transferring');
+      const tx = await activeThirdWebToken.transfer(recipient, amount.toString().concat('000000000000000000'))
+        .then((tx) => {
+          console.log(tx);
+          setAction('Transferred');
+        })
+        .catch(err => {
+          console.log(err);
+          setAction('Error');
+        });
     } else {
       alert('Please fill in all fields');
     }
@@ -55,7 +62,7 @@ const Transfer = ({selectedToken, setAction, thirdWebTokens, walletAddress}) => 
                      value={amount}
                      onChange={(e) => setAmount(e.target.value)}
           />
-          <span>ETH</span>
+          <span>{selectedToken.symbol}</span>
         </FlexInputContainer>
         <Warning style={{color: amount && '#0a0b0d'}}>
           Amount is a required field
@@ -75,7 +82,7 @@ const Transfer = ({selectedToken, setAction, thirdWebTokens, walletAddress}) => 
         <Divider/>
         <Row>
           <FieldName>Pay with</FieldName>
-          <CoinSelectList>
+          <CoinSelectList onClick={() => setAction('Select')}>
             <Icon>
               <img src={url} alt=""/>
             </Icon>
