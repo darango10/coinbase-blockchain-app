@@ -15,6 +15,7 @@ const Portfolio = ({thirdWebTokens, sanityTokens, walletAddress}) => {
   }
 
   useEffect(() => {
+
     const calculateTotalBalance = async () => {
       // let totalBalance = 0;
       // for (const token of thirdWebTokens) {
@@ -24,14 +25,14 @@ const Portfolio = ({thirdWebTokens, sanityTokens, walletAddress}) => {
       // setWalletBalance(totalBalance);
       const totalBalance = await Promise.all(
         thirdWebTokens.map(async (token) => {
-        const balance = await token.balanceOf(walletAddress);
-        return Number(balance.displayValue * tokenToUSD[token.address]);
-      }));
+          const balance = await token.balanceOf(walletAddress);
+          return Number(balance.displayValue * tokenToUSD[token.address]);
+        }));
 
       setWalletBalance(totalBalance.reduce((acc, curr) => acc + curr, 0));
     }
 
-    return calculateTotalBalance();
+    calculateTotalBalance();
   }, [thirdWebTokens, sanityTokens, walletAddress]);
 
 
